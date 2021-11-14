@@ -15,6 +15,15 @@ const Header = ({text}) => {
 }
 
 const Statistics = ({good, neutral, bad}) => {
+  if ([good, neutral, bad].every((count) => count == 0)) {
+    return (
+      <>
+        <p>
+          No feedback given
+        </p>
+      </>
+    )
+  }
   let total = good + neutral + bad
   let avg = (good - bad) / (total)
   let positive = (good / total) * 100
