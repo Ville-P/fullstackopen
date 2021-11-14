@@ -14,10 +14,18 @@ const Header = ({text}) => {
   )
 }
 
-const Statistics = ({type, counter}) => {
+const Statistics = ({good, neutral, bad}) => {
+  let total = good + neutral + bad
+  let avg = (good - bad) / (total)
+  let positive = (good / total) * 100
   return (
     <>
-      <p>{type} {counter}</p>
+      <p>good {good}
+      <br />neutral {neutral}
+      <br />bad {bad}
+      <br />total {total}
+      <br />average {avg}
+      <br />positive {positive} %</p>
     </>
   )
 }
@@ -48,9 +56,7 @@ const App = () => {
       <Button handleClick={handleClick("neutral")} text="neutral" />
       <Button handleClick={handleClick("bad")} text="bad" />
       <Header text="statistics" />
-      <Statistics type="good" counter={good} />
-      <Statistics type="neutral" counter={neutral} />
-      <Statistics type="bad" counter={bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
