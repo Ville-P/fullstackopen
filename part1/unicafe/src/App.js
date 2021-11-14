@@ -14,28 +14,34 @@ const Header = ({text}) => {
   )
 }
 
+const StatisticsLine = ({text, value}) => {
+  return (
+    <>
+    {text} {value} <br />
+    </>
+  )
+}
+
 const Statistics = ({good, neutral, bad}) => {
   if ([good, neutral, bad].every((count) => count == 0)) {
     return (
-      <>
-        <p>
-          No feedback given
-        </p>
-      </>
+      <div>
+        <p>No feedback given</p>
+      </div>
     )
   }
   let total = good + neutral + bad
   let avg = (good - bad) / (total)
   let positive = (good / total) * 100
   return (
-    <>
-      <p>good {good}
-      <br />neutral {neutral}
-      <br />bad {bad}
-      <br />total {total}
-      <br />average {avg}
-      <br />positive {positive} %</p>
-    </>
+    <div>
+      <StatisticsLine text="good" value={good}/>
+      <StatisticsLine text="neutral" value={neutral}/>
+      <StatisticsLine text="bad" value={bad}/>
+      <StatisticsLine text="total" value={total}/>
+      <StatisticsLine text="average" value={avg}/>
+      <StatisticsLine text="positive" value={positive + " %"}/>
+    </div>
   )
 }
 
