@@ -16,14 +16,15 @@ const Header = ({text}) => {
 
 const StatisticsLine = ({text, value}) => {
   return (
-    <>
-    {text} {value} <br />
-    </>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
 const Statistics = ({good, neutral, bad}) => {
-  if ([good, neutral, bad].every((count) => count == 0)) {
+  if ([good, neutral, bad].every((count) => count === 0)) {
     return (
       <div>
         <p>No feedback given</p>
@@ -34,14 +35,16 @@ const Statistics = ({good, neutral, bad}) => {
   let avg = (good - bad) / (total)
   let positive = (good / total) * 100
   return (
-    <div>
-      <StatisticsLine text="good" value={good}/>
-      <StatisticsLine text="neutral" value={neutral}/>
-      <StatisticsLine text="bad" value={bad}/>
-      <StatisticsLine text="total" value={total}/>
-      <StatisticsLine text="average" value={avg}/>
-      <StatisticsLine text="positive" value={positive + " %"}/>
-    </div>
+    <table>
+      <tbody>
+        <StatisticsLine text="good" value={good}/>
+        <StatisticsLine text="neutral" value={neutral}/>
+        <StatisticsLine text="bad" value={bad}/>
+        <StatisticsLine text="total" value={total}/>
+        <StatisticsLine text="average" value={avg}/>
+        <StatisticsLine text="positive" value={positive + " %"}/>
+      </tbody>
+    </table>
   )
 }
 
