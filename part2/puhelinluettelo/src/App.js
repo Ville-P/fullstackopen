@@ -45,7 +45,6 @@ const App = () => {
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        console.log("here")
         setPersons(response.data)
       })
   }, [])
