@@ -7,7 +7,7 @@ const CountrySearch = ({filterValue, onChange}) => (
   </div>
 )
 
-const CountryView = ({countries}) => {
+const CountryView = ({countries, onSelection}) => {
   if (countries.length > 10) {
     return (
       <div>
@@ -17,7 +17,7 @@ const CountryView = ({countries}) => {
   }
   if (countries.length > 1) {
     return (
-      <CountryList countries={countries}/>
+      <CountryList countries={countries} onSelection={onSelection}/>
     )
   }
 
@@ -33,12 +33,21 @@ const CountryView = ({countries}) => {
   )
 }
 
-const CountryList = ({countries}) => (
+const CountryList = ({countries, onSelection}) => (
   <div>
     {countries.map( (country) =>
-      <p key={country.name}>{country.name}</p>
+      <div key={country.name}>
+        {country.name}
+        <Button handleClick={() => onSelection(country.name)} text="show" />
+      </div>
     )}
   </div>
+)
+
+const Button = ({handleClick, text}) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
 )
 
 const Country = ({country}) => (
@@ -52,11 +61,14 @@ const Country = ({country}) => (
 )
 
 const Languages = ({languages}) => (
-  <ul>
-    {languages.map( (language) =>
-      <li key={language.name}>{language.name}</li>
-    )}
-  </ul>
+  <>
+    <h2>languages</h2>
+    <ul>
+      {languages.map( (language) =>
+        <li key={language.name}>{language.name}</li>
+      )}
+    </ul>
+  </>
 )
 
 const Flag = ({source, name}) => (
@@ -79,6 +91,10 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
+  const selectCountry = () => (
+    (country) => setNewFilter(country)
+  )
+
   const countriesToShow = !newFilter
   ? countries
   : countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()))
@@ -86,7 +102,7 @@ const App = () => {
   return (
     <div>
       <CountrySearch  filterValue={newFilter} onChange={handleFilterChange} />
-      <CountryView countries={countriesToShow}/>
+      <CountryView countries={countriesToShow} onSelection={selectCountry()}/>
     </div>
   )
 }
