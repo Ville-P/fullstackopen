@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './index.css'
 
 const PersonForm = ({onSubmit, newName, newNumber, onNameChange, onNumberChange}) => (
   <div>
@@ -38,11 +39,25 @@ const Person = ({person, onPress}) => (
   </div>
 )
 
+const Notification = ({ message, type }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={type}>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -65,6 +80,12 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.filter(person => person.id !== oldPerson.id).concat(returnedPerson))
           })
+          setSuccessMessage(
+            `Updated ${newName}`
+          )
+          setTimeout(() => {
+              setSuccessMessage(null)
+          }, 5000)
       }
       setNewName('')
       setNewNumber('')
@@ -75,6 +96,12 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
       })
+    setSuccessMessage(
+      `Added ${newName}`
+    )
+    setTimeout(() => {
+        setSuccessMessage(null)
+    }, 5000)
     setNewName('')
     setNewNumber('')
   }
@@ -86,6 +113,12 @@ const App = () => {
       .then(
         setPersons(persons.filter(person => person.id !== oldPerson.id))
       )
+      setSuccessMessage(
+        `Removed ${oldPerson.name}`
+      )
+      setTimeout(() => {
+          setSuccessMessage(null)
+      }, 5000)
     }
   }
 
@@ -108,6 +141,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} type={"error"}/>
+      <Notification message={successMessage} type={"success"}/>
       <PersonFilter filterValue={newFilter} onChange={handleFilterChange} />
       <h3>add a new</h3>
       <PersonForm onSubmit={addPerson} newName={newName} newNumber={newNumber} onNameChange={handlePersonChange} onNumberChange={handleNumberChange} />
