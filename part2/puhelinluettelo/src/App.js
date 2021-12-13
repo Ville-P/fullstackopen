@@ -79,13 +79,21 @@ const App = () => {
           .update(oldPerson.id, newPerson)
           .then(returnedPerson => {
             setPersons(persons.filter(person => person.id !== oldPerson.id).concat(returnedPerson))
+            setSuccessMessage(
+              `Updated ${newName}`
+            )
+            setTimeout(() => {
+                setSuccessMessage(null)
+            }, 5000)
           })
-          setSuccessMessage(
-            `Updated ${newName}`
-          )
-          setTimeout(() => {
-              setSuccessMessage(null)
-          }, 5000)
+          .catch(error => {
+            setErrorMessage(
+              `Information of ${newName} has already been removed from server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
       }
       setNewName('')
       setNewNumber('')
