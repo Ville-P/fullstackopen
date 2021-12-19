@@ -103,13 +103,21 @@ const App = () => {
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setSuccessMessage(
+          `Added ${newName}`
+        )
+        setTimeout(() => {
+            setSuccessMessage(null)
+        }, 5000)
       })
-    setSuccessMessage(
-      `Added ${newName}`
-    )
-    setTimeout(() => {
-        setSuccessMessage(null)
-    }, 5000)
+      .catch(error => {
+      setErrorMessage(
+        `${error.response.data.error}`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      })
     setNewName('')
     setNewNumber('')
   }
@@ -118,15 +126,23 @@ const App = () => {
     if (window.confirm(`Delete ${oldPerson.name}?`)) {
       personService
       .remove(oldPerson.id)
-      .then(
+      .then(() => {
         setPersons(persons.filter(person => person.id !== oldPerson.id))
-      )
-      setSuccessMessage(
-        `Removed ${oldPerson.name}`
+        setSuccessMessage(
+          `Removed ${oldPerson.name}`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+      setErrorMessage(
+        `${error.response.data.error}`
       )
       setTimeout(() => {
-          setSuccessMessage(null)
+        setErrorMessage(null)
       }, 5000)
+      })
     }
   }
 
