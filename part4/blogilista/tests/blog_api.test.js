@@ -19,14 +19,13 @@ test('blogs are returned as json', async () => {
 })
 
 test('correct number of blogs is found', async () => {
-  const response = await api.get('/api/blogs')
-
-  expect(response.body).toHaveLength(6)
+  const blogs = await helper.blogsInDb()
+  expect(blogs).toHaveLength(6)
 })
 
 test('all blogs have field id', async () => {
-  const response = await api.get('/api/blogs')
-  response.body.forEach((blog) => {
+  const blogs = await helper.blogsInDb()
+  blogs.forEach((blog) => {
     expect(blog.id).toBeDefined()
   })
 })
@@ -39,15 +38,15 @@ test('a valid blog can be added', async () => {
       url: 'http://test.url',
       likes: 99,
     }
-  const response = await api
+  await api
     .post('/api/blogs')
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const res = await api.get('/api/blogs')
-  const authors = res.body.map(r => r.author)
-  expect(res.body).toHaveLength(helper.initialBlogs.length + 1)
+  const updatedBlogs = await helper.blogsInDb()
+  const authors = updatedBlogs.map(r => r.author)
+  expect(updatedBlogs).toHaveLength(helper.initialBlogs.length + 1)
   expect(authors).toContain('Test Author')
 })
 
@@ -58,28 +57,64 @@ test('a blog without likes will have it defaulted to 0', async () => {
       author: 'Test Author',
       url: 'http://test.url',
     }
-  const response = await api
+  await api
     .post('/api/blogs')
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const res = await api.get('/api/blogs')
-  const createdBlog = res.body.find(blog => blog.author === 'Test Author')
-  expect(res.body).toHaveLength(helper.initialBlogs.length + 1)
+  const updatedBlogs = await helper.blogsInDb()
+  const createdBlog = updatedBlogs.find(blog => blog.author === 'Test Author')
+  expect(updatedBlogs).toHaveLength(helper.initialBlogs.length + 1)
   expect(createdBlog).toBeDefined()
   expect(createdBlog.likes).toBe(0)
 })
 
 test('an invalid blog is rejected correctly', async () => {
   const brokenBlog = { author: 'Test Author' }
-  const response = await api
+  await api
     .post('/api/blogs')
     .send(brokenBlog)
     .expect(400)
 
-  const res = await api.get('/api/blogs')
-  expect(res.body).toHaveLength(helper.initialBlogs.length)
+  const updatedBlogs = await helper.blogsInDb()
+  expect(updatedBlogs).toHaveLength(helper.initialBlogs.length)
+})
+
+test('blogs can be deleted', async () => {
+  const blogs = await helper.blogsInDb()
+  const id = blogs[0].id
+  await api
+    .delete(`/api/blogs/${id}`)
+    .expect(204)
+
+  const updatedBlogs = await helper.blogsInDb()
+  expect(updatedBlogs).toHaveLength(helper.initialBlogs.length - 1)
+})
+
+test('a blog can be edited', async () => {
+  const blogs = await helper.blogsInDb()
+  const blog = blogs[0]
+  const id = blog.id
+
+  const modifiedBlog =
+    {
+      title: blog.title,
+      author: 'Modified Author',
+      url: blog.url,
+      likes: 1337,
+    }
+  await api
+    .put(`/api/blogs/${id}`)
+    .send(modifiedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const updatedBlogs = await helper.blogsInDb()
+  const updatedBlog = updatedBlogs.find(blog => blog.author === 'Modified Author')
+  expect(updatedBlogs).toHaveLength(helper.initialBlogs.length)
+  expect(updatedBlog).toBeDefined()
+  expect(updatedBlog.likes).toBe(1337)
 })
 
 afterAll(() => {
