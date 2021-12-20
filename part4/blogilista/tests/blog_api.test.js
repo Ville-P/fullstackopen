@@ -71,6 +71,17 @@ test('a blog without likes will have it defaulted to 0', async () => {
   expect(createdBlog.likes).toBe(0)
 })
 
+test('an invalid blog is rejected correctly', async () => {
+  const brokenBlog = { author: 'Test Author' }
+  const response = await api
+    .post('/api/blogs')
+    .send(brokenBlog)
+    .expect(400)
+
+  const res = await api.get('/api/blogs')
+  expect(res.body).toHaveLength(helper.initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
