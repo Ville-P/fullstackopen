@@ -31,6 +31,26 @@ test('all blogs have field id', async () => {
   })
 })
 
+test('a valid blog can be added', async () => {
+  const newBlog =
+    {
+      title: 'Test Blog',
+      author: 'Test Author',
+      url: 'http://test.url',
+      likes: 99,
+    }
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const res = await api.get('/api/blogs')
+  const authors = res.body.map(r => r.author)
+  expect(res.body).toHaveLength(helper.initialBlogs.length + 1)
+  expect(authors).toContain('Test Author')
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
