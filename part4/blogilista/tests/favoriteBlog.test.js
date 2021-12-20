@@ -16,8 +16,8 @@ describe('favorite blog', () => {
     expect(result).toEqual(listWithMultipleBlogs[2])
   })
 
-  test('when list is empty return null', () => {
+  test('when list is empty return undefined', () => {
     const result = listHelper.favoriteBlog(emptyList)
-    expect(result).toBe(null)
+    expect(result).toBe(undefined)
   })
 })
