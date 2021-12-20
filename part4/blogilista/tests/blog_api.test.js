@@ -51,6 +51,26 @@ test('a valid blog can be added', async () => {
   expect(authors).toContain('Test Author')
 })
 
+test('a blog without likes will have it defaulted to 0', async () => {
+  const newBlog =
+    {
+      title: 'Test Blog',
+      author: 'Test Author',
+      url: 'http://test.url',
+    }
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const res = await api.get('/api/blogs')
+  const createdBlog = res.body.find(blog => blog.author === 'Test Author')
+  expect(res.body).toHaveLength(helper.initialBlogs.length + 1)
+  expect(createdBlog).toBeDefined()
+  expect(createdBlog.likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
