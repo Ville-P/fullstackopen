@@ -13,9 +13,6 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
@@ -67,14 +64,7 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title,
-      author,
-      url,
-    }
-
+  const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
       blogFormRef.current.toggleVisibility()
@@ -110,15 +100,9 @@ const App = () => {
           <button onClick={handleLogout}>
             logout
           </button>
-          <Togglable buttonLabel="Creaate new blog" ref={blogFormRef}>
+          <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
             <BlogForm
-              submitHandler={addBlog}
-              title={title}
-              titleSetter={setTitle}
-              author={author}
-              authorSetter={setAuthor}
-              url={url}
-              urlSetter={setUrl}
+              createBlog={addBlog}
             />
           </Togglable>
           <div>
