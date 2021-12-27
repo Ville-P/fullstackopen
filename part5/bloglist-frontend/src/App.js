@@ -81,6 +81,27 @@ const App = () => {
     }
   }
 
+  const updateLikes = async (blogObject) => {
+    try {
+      const updatedBlog = await blogService.update(blogObject.id, blogObject)
+      const updatedBlogs = blogs
+        .filter(blog => blog.id !== updatedBlog.id)
+        .concat(updatedBlog)
+      setBlogs(updatedBlogs)
+      setSuccessMessage(`Liked '${updatedBlog.title}'`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setErrorMessage(`Unable to like: ${exception}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+
+
   return (
     <div>
       <h2>blogs</h2>
@@ -107,7 +128,7 @@ const App = () => {
           </Togglable>
           <div>
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />
+              <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
             )}
           </div>
         </div>

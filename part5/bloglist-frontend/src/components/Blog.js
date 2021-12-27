@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({blog}) => {
+const Blog = ({blog, updateLikes}) => {
   const [fullView, setFullView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -10,13 +10,19 @@ const Blog = ({blog}) => {
     marginBottom: 5
   }
 
+  const addLike = () => {
+    updateLikes(
+      {...blog, likes: blog.likes + 1 }
+    )
+  }
+
   return fullView ?
     (
       <div style={blogStyle}>
         {blog.title}
         <button onClick={()  => setFullView(false)}>hide</button><br/>
         {blog.url}<br/>
-        likes {blog.likes}<button>like</button><br/>
+        likes {blog.likes}<button onClick={addLike}>like</button><br/>
         {blog.author}
       </div>
     ) : (
