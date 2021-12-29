@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({blog, updateLikes, user, removeBlog }) => {
+const Blog = ({ blog, updateLikes, user, removeBlog }) => {
   const [fullView, setFullView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -12,7 +12,7 @@ const Blog = ({blog, updateLikes, user, removeBlog }) => {
 
   const addLike = () => {
     updateLikes(
-      {...blog, likes: blog.likes + 1 }
+      { ...blog, likes: blog.likes + 1 }
     )
   }
 

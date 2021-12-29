@@ -94,7 +94,7 @@ const App = () => {
       return
     }
     try {
-      const response = await blogService.remove(blogObject.id)
+      await blogService.remove(blogObject.id)
       setBlogsSorted(blogs.filter(blog => blog.id !== blogObject.id))
       setSuccessMessage(`Blog '${blogObject.title}' by ${blogObject.author} removed`)
       setTimeout(() => {
@@ -133,8 +133,8 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage} type={"error"}/>
-      <Notification message={successMessage} type={"success"}/>
+      <Notification message={errorMessage} type={'error'}/>
+      <Notification message={successMessage} type={'success'}/>
 
       {user === null ?
         <LoginForm
