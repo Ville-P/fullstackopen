@@ -88,6 +88,27 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (blogObject) => {
+    const confirm = window.confirm(`Remove '${blogObject.title}' by ${blogObject.author}`)
+    if (!confirm) {
+      return
+    }
+    try {
+      const response = await blogService.remove(blogObject.id)
+      setBlogsSorted(blogs.filter(blog => blog.id !== blogObject.id))
+      setSuccessMessage(`Blog '${blogObject.title}' by ${blogObject.author} removed`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setErrorMessage(`Blog removal failed with ${exception}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+
   const updateLikes = async (blogObject) => {
     try {
       const updatedBlog = await blogService.update(blogObject.id, blogObject)
@@ -135,7 +156,13 @@ const App = () => {
           </Togglable>
           <div>
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateLikes={updateLikes}
+                user={user}
+                removeBlog={removeBlog}
+              />
             )}
           </div>
         </div>

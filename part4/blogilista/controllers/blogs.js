@@ -42,7 +42,7 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
   } else {
     return response.status(401).json({ error: 'wrong user' })
   }
-  await Blog.findByIdAndRemove(request.params.id)
+  // await Blog.findByIdAndRemove(request.params.id)
 })
 
 blogsRouter.put('/:id', middleware.userExtractor, async (request, response) => {
