@@ -33,9 +33,7 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.get('#username').type("test-account")
-      cy.get('#password').type("salis")
-      cy.get('#login-button').click()
+      cy.login({ username: 'test-account', password: 'salis' })
     })
 
     it('A blog can be created', function() {
@@ -45,6 +43,14 @@ describe('Blog app', function() {
       cy.get('#url').type("www.blogit.com")
       cy.get('#create-blog-button').click()
       cy.get('#blog-list').contains('Hieno blogi!')
+    })
+
+    it('A blog can be liked', function() {
+      cy.createBlog({title: "Paras blogi!", author: "Mikko", url: "sankari.fi"})
+      cy.get('#blog-list').contains('Paras blogi!').contains("view").click()
+      cy.get('#blog-list').contains('Paras blogi!').contains("likes 0")
+      cy.get('#blog-list').contains('Paras blogi!').contains("like").click()
+      cy.get('#blog-list').contains('Paras blogi!').contains("likes 1")
     })
   })
 })
