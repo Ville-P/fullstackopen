@@ -52,5 +52,13 @@ describe('Blog app', function() {
       cy.get('#blog-list').contains('Paras blogi!').contains("like").click()
       cy.get('#blog-list').contains('Paras blogi!').contains("likes 1")
     })
+
+    it('A blog can be removed', function() {
+      cy.createBlog({title: "Paras blogi!", author: "Mikko", url: "sankari.fi"})
+      cy.get('#blog-list').contains('Paras blogi!').contains("view").click()
+      cy.get('#blog-list').contains('Paras blogi!').contains("remove").click()
+      cy.get('.success').contains("Blog 'Paras blogi!' by Mikko removed")
+      cy.get('#blog-list').should('not.contain', 'Paras blogi!')
+    })
   })
 })
