@@ -60,5 +60,33 @@ describe('Blog app', function() {
       cy.get('.success').contains('Blog \'Paras blogi!\' by Mikko removed')
       cy.get('#blog-list').should('not.contain', 'Paras blogi!')
     })
+
+    it('Blogs are sorted', function() {
+      cy.createBlog({ title: 'a-blog', author: 'Mikko', url: 'sankari.fi' })
+      cy.createBlog({ title: 'b-blog', author: 'Mikko', url: 'sankari.fi' })
+      cy.createBlog({ title: 'c-blog', author: 'Mikko', url: 'sankari.fi' })
+
+      cy.get('#blog-list').contains('a-blog').as('aBlog')
+      cy.get('#blog-list').contains('b-blog').as('bBlog')
+      cy.get('#blog-list').contains('c-blog').as('cBlog')
+
+      // open view to show like button
+      cy.get('@aBlog').contains('view').click()
+      cy.get('@bBlog').contains('view').click()
+      cy.get('@cBlog').contains('view').click()
+
+      // a-blog 2 likes, b-blog 1 like and c-blog 0 likes
+      cy.get('@aBlog').contains('like').click()
+      cy.get('@aBlog').contains('likes 1')
+      cy.get('@aBlog').contains('like').click()
+      cy.get('@aBlog').contains('likes 2')
+
+      cy.get('@bBlog').contains('like').click()
+      cy.get('@bBlog').contains('likes 1')
+
+      cy.get('#blog-list>div').eq(0).should('contain', 'a-blog')
+      cy.get('#blog-list>div').eq(1).should('contain', 'b-blog')
+      cy.get('#blog-list>div').eq(2).should('contain', 'c-blog')
+    })
   })
 })
