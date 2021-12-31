@@ -3,7 +3,7 @@ describe('Blog app', function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
     cy.request(
       'POST', 'http://localhost:3003/api/users',
-      {username: "test-account", name: "Test Account", password: "salis"}
+      { username: 'test-account', name: 'Test Account', password: 'salis' }
     )
     cy.visit('http://localhost:3000')
   })
@@ -16,15 +16,15 @@ describe('Blog app', function() {
 
   describe('Login',function() {
     it('succeeds with correct credentials', function() {
-      cy.get('#username').type("test-account")
-      cy.get('#password').type("salis")
+      cy.get('#username').type('test-account')
+      cy.get('#password').type('salis')
       cy.get('#login-button').click()
-      cy.contains("Test Account logged in")
+      cy.contains('Test Account logged in')
     })
 
     it('fails with wrong credentials', function() {
-      cy.get('#username').type("test-account")
-      cy.get('#password').type("salis2")
+      cy.get('#username').type('test-account')
+      cy.get('#password').type('salis2')
       cy.get('#login-button').click()
       cy.get('.error').contains('wrong username or password')
       cy.get('html').should('not.contain', 'Test Account logged in')
@@ -37,27 +37,27 @@ describe('Blog app', function() {
     })
 
     it('A blog can be created', function() {
-      cy.contains("Create new blog").click()
-      cy.get('#title').type("Hieno blogi!")
-      cy.get('#author').type("Matti")
-      cy.get('#url').type("www.blogit.com")
+      cy.contains('Create new blog').click()
+      cy.get('#title').type('Hieno blogi!')
+      cy.get('#author').type('Matti')
+      cy.get('#url').type('www.blogit.com')
       cy.get('#create-blog-button').click()
       cy.get('#blog-list').contains('Hieno blogi!')
     })
 
     it('A blog can be liked', function() {
-      cy.createBlog({title: "Paras blogi!", author: "Mikko", url: "sankari.fi"})
-      cy.get('#blog-list').contains('Paras blogi!').contains("view").click()
-      cy.get('#blog-list').contains('Paras blogi!').contains("likes 0")
-      cy.get('#blog-list').contains('Paras blogi!').contains("like").click()
-      cy.get('#blog-list').contains('Paras blogi!').contains("likes 1")
+      cy.createBlog({ title: 'Paras blogi!', author: 'Mikko', url: 'sankari.fi' })
+      cy.get('#blog-list').contains('Paras blogi!').contains('view').click()
+      cy.get('#blog-list').contains('Paras blogi!').contains('likes 0')
+      cy.get('#blog-list').contains('Paras blogi!').contains('like').click()
+      cy.get('#blog-list').contains('Paras blogi!').contains('likes 1')
     })
 
     it('A blog can be removed', function() {
-      cy.createBlog({title: "Paras blogi!", author: "Mikko", url: "sankari.fi"})
-      cy.get('#blog-list').contains('Paras blogi!').contains("view").click()
-      cy.get('#blog-list').contains('Paras blogi!').contains("remove").click()
-      cy.get('.success').contains("Blog 'Paras blogi!' by Mikko removed")
+      cy.createBlog({ title: 'Paras blogi!', author: 'Mikko', url: 'sankari.fi' })
+      cy.get('#blog-list').contains('Paras blogi!').contains('view').click()
+      cy.get('#blog-list').contains('Paras blogi!').contains('remove').click()
+      cy.get('.success').contains('Blog \'Paras blogi!\' by Mikko removed')
       cy.get('#blog-list').should('not.contain', 'Paras blogi!')
     })
   })
