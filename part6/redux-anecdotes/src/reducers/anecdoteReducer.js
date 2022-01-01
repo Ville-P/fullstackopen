@@ -25,8 +25,6 @@ const sortAnecdotes = ( anecdoteState => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
   switch (action.type) {
     case 'VOTE':
       const unModified = state.filter(anecdote => anecdote.id !== action.data.id)
