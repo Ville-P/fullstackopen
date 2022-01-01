@@ -17,6 +17,11 @@ const asObject = (anecdote) => {
   }
 }
 
+const sortAnecdotes = ( anecdoteState => {
+  anecdoteState.sort((a, b) => b.votes - a.votes)
+  return anecdoteState
+})
+
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
@@ -26,9 +31,10 @@ const reducer = (state = initialState, action) => {
     case 'VOTE':
       const unModified = state.filter(anecdote => anecdote.id !== action.data.id)
       const likedOne = state.find(anecdote => anecdote.id === action.data.id)
-      return unModified.concat({...likedOne, votes: likedOne.votes + 1})
+      let updated = unModified.concat({...likedOne, votes: likedOne.votes + 1})
+      return sortAnecdotes(updated)
     case 'NEW_ANECDOTE':
-      return state.concat(action.data)
+      return sortAnecdotes(state.concat(action.data))
     default: return state
   }
 }
