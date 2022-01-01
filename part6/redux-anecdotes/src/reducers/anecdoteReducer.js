@@ -27,7 +27,16 @@ const reducer = (state = initialState, action) => {
       const unModified = state.filter(anecdote => anecdote.id !== action.data.id)
       const likedOne = state.find(anecdote => anecdote.id === action.data.id)
       return unModified.concat({...likedOne, votes: likedOne.votes + 1})
+    case 'NEW_ANECDOTE':
+      return state.concat(action.data)
     default: return state
+  }
+}
+
+export const createAnecdote = (content) => {
+  return {
+    type: 'NEW_ANECDOTE',
+    data: asObject(content)
   }
 }
 
